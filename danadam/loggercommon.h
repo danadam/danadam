@@ -2,7 +2,7 @@
 #define LOGGER_COMMON_H_GUARD
 
 #define INIT_LOGGER() \
-    da::ELogLevel::E da::g_logLevel = da::ELogLevel::trace
+    da::LogOptions da::g_logOptions = { da::ELogLevel::trace }
 
 namespace da
 {
@@ -13,7 +13,14 @@ struct ELogLevel
     static inline const char * c_str(E e);
 };
 
-extern ELogLevel::E g_logLevel;
+struct LogOptions
+{
+    ELogLevel::E logLevel;
+};
+
+extern LogOptions g_logOptions;
+
+void setLogLevel(da::ELogLevel::E logLevel) { g_logOptions.logLevel = logLevel; }
 
 } // namespace
 

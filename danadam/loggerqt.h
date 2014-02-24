@@ -26,7 +26,7 @@ public:
     ~LoggerHelper()
     {
         static QMutex s_mutex;
-        if (m_level >= g_logLevel)
+        if (m_level >= g_logOptions.logLevel)
         {
             QMutexLocker locker(&s_mutex);
             logf("%s %s (%s:%d) - %s\n",

@@ -9,7 +9,7 @@
 #include "loggercommon.h"
 
 #define LOGF(level, msg, ...) \
-    (level < da::g_logLevel) \
+    (level < da::g_logOptions.logLevel) \
         ? da::logf_noop() \
         : da::logf("%s %s (%s:%d) - " msg "\n", \
                 da::datetimeString().s, \
