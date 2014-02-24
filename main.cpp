@@ -19,12 +19,12 @@ void test_loggerf()
 
     TRACEF("Plain message, without arguments");
     TRACEF("Message with arguments: %s - %d", str, i);
-    TRACEF("Let's increase log level to info");
-    da::g_logLevel = da::ELogLevel::info;
-    TRACEF("This shouldn't be displayed");
-    INFOF("This should still be displayed, let's go back to trace level");
-    da::g_logLevel = da::ELogLevel::trace;
-    TRACEF("This should be displayed");
+    TRACEF("  * Let's increase log level to info");
+    da::setLogLevel(da::ELogLevel::info);
+    TRACEF("!!! This shouldn't be displayed !!!");
+    INFOF("  *** This should still be displayed, let's go back to trace level");
+    da::setLogLevel(da::ELogLevel::trace);
+    TRACEF("***** This should be displayed");
 }
 
 void test_loggerqt()
@@ -40,12 +40,12 @@ void test_loggerqt()
 
     TRACE("Plain message, without arguments");
     TRACE("Message with arguments: %1 - %2").arg(str).arg(i);
-    TRACE("Let's increase log level to info");
-    da::g_logLevel = da::ELogLevel::info;
-    TRACE("This shouldn't be displayed");
-    INFO("This should still be displayed, let's go back to trace level");
-    da::g_logLevel = da::ELogLevel::trace;
-    TRACE("This should be displayed");
+    TRACE("  * Let's increase log level to info");
+    setLogLevel(da::ELogLevel::info);
+    TRACE("!!! This shouldn't be displayed !!!");
+    INFO("  *** This should still be displayed, let's go back to trace level");
+    da::setLogLevel(da::ELogLevel::trace);
+    TRACE("***** This should be displayed");
 }
 
 void test_itoa()
