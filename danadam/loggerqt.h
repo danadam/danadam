@@ -5,6 +5,8 @@
 #include <QMutex>
 #include <QMutexLocker>
 
+#include "loggercommon.h"
+
 #define TRACE(msg) da::LoggerHelper(da::datetimeString().s, da::ELogLevel::trace, __FILE__, __LINE__) << QString(msg)
 #define INFO(msg)  da::LoggerHelper(da::datetimeString().s, da::ELogLevel::info,  __FILE__, __LINE__) << QString(msg)
 #define WARN(msg)  da::LoggerHelper(da::datetimeString().s, da::ELogLevel::warn,  __FILE__, __LINE__) << QString(msg)
