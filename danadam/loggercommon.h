@@ -2,7 +2,7 @@
 #define LOGGER_COMMON_H_GUARD
 
 #define INIT_LOGGER() \
-    da::LogOptions da::g_logOptions = { da::ELogLevel::trace }
+    da::LogOptions da::g_logOptions = { da::ELogLevel::trace, true, true, true }
 
 namespace da
 {
@@ -13,14 +13,29 @@ struct ELogLevel
     static inline const char * c_str(E e);
 };
 
+struct LogFormat
+{
+    bool datetime;
+    bool logLevel;
+    bool place;
+};
+
 struct LogOptions
 {
     ELogLevel::E logLevel;
+    LogFormat format;
 };
 
 extern LogOptions g_logOptions;
 
 void setLogLevel(da::ELogLevel::E logLevel) { g_logOptions.logLevel = logLevel; }
+
+inline void setLogFormat(bool datetime, bool logLevel, bool place)
+{
+    g_logOptions.format.datetime = datetime;
+    g_logOptions.format.logLevel = logLevel;
+    g_logOptions.format.place = place;
+}
 
 } // namespace
 
