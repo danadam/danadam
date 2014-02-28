@@ -2,6 +2,8 @@
 #include "loggerqt.h"
 
 #include "itoa.h"
+#include "stringutils.h"
+#include <vector>
 
 INIT_LOGGER();
 
@@ -85,6 +87,72 @@ void test_itoa()
     TRACE("n = %1, buf = %2, bufsz = %3, written = %4, truncated? %5").arg(n).arg(buf).arg(bufsz).arg(written).arg(!ok);
 }
 
+class EmailValidator
+{
+public:
+    explicit EmailValidator(const std::string & email)
+        : m_valid(false)
+    {
+        validate(email);
+    }
+
+    bool isValid() const { return m_valid; }
+    std::vector<int> whereInvalid() const { return m_positions; }
+
+private:
+    void validate(const std::string & email)
+    {
+//        static const std::string invalidInLocalPart("@()[]\\:;\",<>");
+        static const std::string invalidInLocalPart(" []\\:;,<>");
+        static const std::string invalidInDomain(" ");
+
+        typedef std::vector<std::string> StringVector;
+        const StringVector tokens = da::split<StringVector>(email, "@", true);
+        if (tokens.size() != 2)
+        {
+            m_valid = false;
+            return;
+        }
+
+        std::string::size_type pos, lastPos = 0;
+
+        while (true)
+        {
+            pos = tokens[0].find_first_of(invalidInLocalPart, lastPos);
+            if (pos == std::string::npos)
+            {
+                break;
+            }
+            else
+            {
+                m_positions.push_back(pos);
+            }
+
+            lastPos = pos + 1;
+        }
+        lastPos = 0;
+        while (true)
+        {
+            pos = tokens[1].find_first_of(invalidInDomain, lastPos);
+            if (pos == std::string::npos)
+            {
+                break;
+            }
+            else
+            {
+                m_positions.push_back(pos + tokens[0].length() + 1);
+            }
+
+            lastPos = pos + 1;
+        }
+
+        m_valid = m_positions.empty();
+    }
+
+    bool m_valid;
+    std::vector<int> m_positions;
+};
+
 int main(int argc, char * argv[])
 {
     (void)argc;
@@ -93,4 +161,14 @@ int main(int argc, char * argv[])
     test_loggerf();
     test_loggerqt();
     test_itoa();
+
+    std::string email("dana<dam@poczta. fm");
+    EmailValidator ev(email);
+    TRACEF("valid? %d", ev.isValid());
+
+    std::vector<int> positions = ev.whereInvalid();
+    for (int i = 0; i < positions.size(); i++)
+    {
+        TRACEF("%d '%c'", positions[i], email[positions[i]]);
+    }
 }
