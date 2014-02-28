@@ -3,6 +3,7 @@
 
 #include "itoa.h"
 #include "stringutils.h"
+#include "emailvalidator.h"
 
 INIT_LOGGER();
 
@@ -189,6 +190,22 @@ void test_escapeString()
     test_escapeString_case(":,", '^', "^:^,^:^", "^^^:^^^,^^^:^^");
 }
 
+void test_emailValidator()
+{
+    TRACE("%1(): --------------------------------").arg(__func__);
+
+    std::string email("dana<dam@poczta. fm");
+    TRACEF("validating: %s", email.c_str());
+    da::EmailValidator ev(email);
+    TRACEF("valid? %d", ev.isValid());
+
+    std::vector<int> positions = ev.whereInvalid();
+    for (int i = 0; i < positions.size(); i++)
+    {
+        TRACEF("%d '%c'", positions[i], email[positions[i]]);
+    }
+}
+
 int main(int argc, char * argv[])
 {
     (void)argc;
@@ -198,4 +215,5 @@ int main(int argc, char * argv[])
     test_loggerqt();
     test_itoa();
     test_escapeString();
+    test_emailValidator();
 }
