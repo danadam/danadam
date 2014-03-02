@@ -25,6 +25,18 @@ void test_loggerf()
     INFOF("  *** This should still be displayed, let's go back to trace level");
     da::setLogLevel(da::ELogLevel::trace);
     TRACEF("***** This should be displayed");
+
+    da::setLogFormat(false, false, false);
+    TRACEF("Message with not header");
+
+    da::setLogFormat(true, false, false);
+    TRACEF("Message with datetime");
+
+    da::setLogFormat(true, true, false);
+    TRACEF("Message with datetime and level");
+
+    da::setLogFormat(true, true, true);
+    TRACEF("Message with datetime and level and place");
 }
 
 void test_loggerqt()
@@ -46,6 +58,18 @@ void test_loggerqt()
     INFO("  *** This should still be displayed, let's go back to trace level");
     da::setLogLevel(da::ELogLevel::trace);
     TRACE("***** This should be displayed");
+
+    da::setLogFormat(false, false, false);
+    TRACE("Message with not header");
+
+    da::setLogFormat(true, false, false);
+    TRACE("Message with datetime");
+
+    da::setLogFormat(true, true, false);
+    TRACE("Message with datetime and level");
+
+    da::setLogFormat(true, true, true);
+    TRACE("Message with datetime and level and place");
 }
 
 void test_itoa()

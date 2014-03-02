@@ -63,11 +63,8 @@ inline void setLogFormat(bool datetime, bool logLevel, bool place)
 // --------------------------------
 
 
-#if defined(_MSC_VER)
-#  define ATTRIBUTE_FORMAT
-#else
+#if not defined(_MSC_VER)
 #  include <sys/time.h> // gettimeofday
-#  define ATTRIBUTE_FORMAT __attribute__ ((format (printf, 1, 2)))
 #endif
 
 #include <stdio.h>
@@ -114,9 +111,45 @@ inline DateTimeString datetimeString()
 }
 
 inline void logf_noop() { }
-inline void logf(const char * fmt, ...) ATTRIBUTE_FORMAT;
-inline void logf(const char * fmt, ...)
+inline void logf(const char * datetime, const char * level, const char * file, int line, const char * fmt, ...)
+#if defined(_MSC_VER)
+    ;
+#else
+__attribute__ ((format (printf, 5, 6)));
+#endif
+
+inline void logf(const char * datetime, const char * level, const char * file, int line, const char * fmt, ...)
 {
+#define SAFE_STR(s) s ? s : ""
+#define SAFE_SEP(s) s ? " " : ""
+
+    if (file)
+    {
+        printf(
+                "%s%s%s%s(%s:%d) - ",
+                SAFE_STR(datetime),
+                SAFE_SEP(datetime),
+                SAFE_STR(level),
+                SAFE_SEP(level),
+                file,
+                line
+            );
+    }
+    else if (datetime || level)
+    {
+        printf(
+                "%s%s%s%s- ",
+                SAFE_STR(datetime),
+                SAFE_SEP(datetime),
+                SAFE_STR(level),
+                SAFE_SEP(level)
+            );
+
+    }
+
+#undef SAFE_STR
+#undef SAFE_SEP
+
     va_list args;
     va_start(args, fmt);
     vprintf(fmt, args);

@@ -11,11 +11,12 @@
 #define LOGF(level, msg, ...) \
     (level < da::g_logOptions.logLevel) \
         ? da::logf_noop() \
-        : da::logf("%s %s (%s:%d) - " msg "\n", \
-                da::datetimeString().s, \
-                da::ELogLevel::c_str(level), \
-                __FILE__, \
+        : da::logf( \
+                da::g_logOptions.format.datetime ? da::datetimeString().s : 0, \
+                da::g_logOptions.format.logLevel ? da::ELogLevel::c_str(level) : 0, \
+                da::g_logOptions.format.place ? __FILE__ : 0, \
                 __LINE__, \
+                msg "\n", \
                 ##__VA_ARGS__ \
             )
 

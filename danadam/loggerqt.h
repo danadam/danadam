@@ -7,11 +7,18 @@
 
 #include "loggercommon.h"
 
-#define TRACE(msg) da::LoggerHelper(da::datetimeString().s, da::ELogLevel::trace, __FILE__, __LINE__) << QString(msg)
-#define INFO(msg)  da::LoggerHelper(da::datetimeString().s, da::ELogLevel::info,  __FILE__, __LINE__) << QString(msg)
-#define WARN(msg)  da::LoggerHelper(da::datetimeString().s, da::ELogLevel::warn,  __FILE__, __LINE__) << QString(msg)
-#define ERROR(msg) da::LoggerHelper(da::datetimeString().s, da::ELogLevel::error, __FILE__, __LINE__) << QString(msg)
+#define TRACE(msg) LOG(da::ELogLevel::trace) << QString(msg)
+#define INFO(msg)  LOG(da::ELogLevel::info)  << QString(msg)
+#define WARN(msg)  LOG(da::ELogLevel::warn)  << QString(msg)
+#define ERROR(msg) LOG(da::ELogLevel::error) << QString(msg)
 
+#define LOG(level) \
+    da::LoggerHelper( \
+            level >= da::g_logOptions.logLevel && da::g_logOptions.format.datetime ? da::datetimeString().s : 0, \
+            level, \
+            __FILE__, \
+            __LINE__ \
+        )
 
 namespace da
 {
@@ -31,11 +38,12 @@ public:
         if (m_level >= g_logOptions.logLevel)
         {
             QMutexLocker locker(&s_mutex);
-            logf("%s %s (%s:%d) - %s\n",
+            logf(
                     m_dt,
-                    ELogLevel::c_str(m_level),
-                    m_file,
+                    da::g_logOptions.format.logLevel ? da::ELogLevel::c_str(m_level) : 0,
+                    da::g_logOptions.format.place ? m_file : 0,
                     m_line,
+                    "%s\n",
                     m_msg.toUtf8().data()
                 );
         }
