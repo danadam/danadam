@@ -206,6 +206,94 @@ void test_emailValidator()
     }
 }
 
+void test_split()
+{
+    TRACE("%1(): --------------------------------").arg(__func__);
+
+    typedef std::vector<std::string> StringList;
+    const bool trim = true;
+    {
+        StringList result = da::split<StringList>("", " ", !trim);
+        if (result.size() != 1 || result[0] != "")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("", " ", trim);
+        if (result.size() != 0)
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>(" ", " ", !trim);
+        if (result.size() != 2 || result[0] != "" || result[1] != "")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("", " ", trim);
+        if (result.size() != 0)
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("abc", " ", !trim);
+        if (result.size() != 1 || result[0] != "abc")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("abc", " ", trim);
+        if (result.size() != 1 || result[0] != "abc")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>(" abc", " ", !trim);
+        if (result.size() != 2 || result[0] != "" || result[1] != "abc")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>(" abc", " ", trim);
+        if (result.size() != 1 || result[0] != "abc")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("abc ", " ", !trim);
+        if (result.size() != 2 || result[0] != "abc" || result[1] != "")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("abc ", " ", trim);
+        if (result.size() != 1 || result[0] != "abc")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>(" abc ", " ", !trim);
+        if (result.size() != 3 || result[0] != "" || result[1] != "abc" || result[2] != "")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>(" abc ", " ", trim);
+        if (result.size() != 1 || result[0] != "abc")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("abc def", " ", !trim);
+        if (result.size() != 2 || result[0] != "abc" || result[1] != "def")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("abc def", " ", trim);
+        if (result.size() != 2 || result[0] != "abc" || result[1] != "def")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("abc  def", " ", !trim);
+        if (result.size() != 3 || result[0] != "abc" || result[1] != "" || result[2] != "def")
+            WARNF("failed");
+    }
+    {
+        StringList result = da::split<StringList>("abc  def", " ", trim);
+        if (result.size() != 2 || result[0] != "abc" || result[1] != "def")
+            WARNF("failed");
+    }
+}
+
 int main(int argc, char * argv[])
 {
     (void)argc;
@@ -216,4 +304,5 @@ int main(int argc, char * argv[])
     test_itoa();
     test_escapeString();
     test_emailValidator();
+    test_split();
 }
