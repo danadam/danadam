@@ -17,8 +17,9 @@ ContainerT split(
     typedef ContainerT Base;
     typedef typename Base::value_type ValueType;
     typedef typename ValueType::size_type SizeType;
+    typedef std::string::size_type StringPos;
 
-    std::string::size_type pos, lastPos = 0;
+    StringPos pos, lastPos = 0;
     ContainerT tokens;
 
     while (true)
