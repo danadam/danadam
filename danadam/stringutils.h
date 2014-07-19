@@ -7,6 +7,7 @@ namespace da
 {
 
 // http://stackoverflow.com/a/1493195/85696
+// modified
 template < class ContainerT>
 ContainerT split(
         const std::string & str,
@@ -19,36 +20,28 @@ ContainerT split(
     typedef typename ValueType::size_type SizeType;
     typedef std::string::size_type StringPos;
 
-    StringPos pos, lastPos = 0;
+    StringPos lastPos = 0;
     ContainerT tokens;
 
     while (true)
     {
-        pos = str.find_first_of(delimiters, lastPos);
-        if (pos == std::string::npos)
-        {
+        StringPos pos = str.find_first_of(delimiters, lastPos);
+        const bool foundDelimiter = (pos != std::string::npos);
+
+        if (!foundDelimiter)
             pos = str.length();
 
-            if (pos != lastPos || !trimEmpty)
-            {
-                tokens.push_back(
-                        ValueType(str.data() + lastPos, (SizeType)pos - lastPos)
-                    );
-            }
-
-            break;
-        }
-        else
+        if (pos != lastPos || !trimEmpty)
         {
-            if (pos != lastPos || !trimEmpty)
-            {
-                tokens.push_back(
-                        ValueType(str.data() + lastPos, (SizeType)pos - lastPos)
-                    );
-            }
+            tokens.push_back(
+                    ValueType(str.data() + lastPos, (SizeType)pos - lastPos)
+                );
         }
 
-        lastPos = pos + 1;
+        if (foundDelimiter)
+            lastPos = pos + 1;
+        else
+            break;
     }
 
     return tokens;
