@@ -4,6 +4,7 @@
 #include "itoa.h"
 #include "stringutils.h"
 #include "emailvalidator.h"
+#include "stringenum.h"
 
 INIT_LOGGER();
 
@@ -294,6 +295,163 @@ void test_split()
     }
 }
 
+void test_stringenum()
+{
+    TRACE("%1(): --------------------------------").arg(__func__);
+
+    DEFINE_STRING_ENUM(StringEnum, aaa, bbb, ccc);
+
+    TRACEF("---- default constructor");
+    {
+        StringEnum e;
+        TRACEF("e = %s", e.str().c_str());
+    }
+
+    TRACEF("---- constructor from enum");
+    {
+        StringEnum e(StringEnum::bbb);
+        TRACEF("e = %s", e.str().c_str());
+    }
+    {
+        StringEnum e = StringEnum::bbb;
+        TRACEF("e = %s", e.str().c_str());
+    }
+    TRACEF("---- assign from enum");
+    {
+        StringEnum e;
+        e = StringEnum::bbb;
+        TRACEF("e = %s", e.str().c_str());
+    }
+
+    TRACEF("---- copy constructor");
+    {
+        StringEnum e1 = StringEnum::bbb;
+        StringEnum e(e1);
+        TRACEF("e = %s", e.str().c_str());
+    }
+    {
+        StringEnum e1 = StringEnum::bbb;
+        StringEnum e = e1;
+        TRACEF("e = %s", e.str().c_str());
+    }
+    TRACEF("---- assign operator");
+    {
+        StringEnum e1 = StringEnum::bbb;
+        StringEnum e;
+        e = e1;
+        TRACEF("e = %s", e.str().c_str());
+    }
+
+    TRACEF("---- constructor from int");
+    {
+//        StringEnum e(0);
+//        TRACEF("e = %s", e.str().c_str());
+    }
+    {
+//        StringEnum e = 0;
+//        TRACEF("e = %s", e.str().c_str());
+    }
+    TRACEF("---- assign from int");
+    {
+//        StringEnum e;
+//        e = 0;
+//        TRACEF("e = %s", e.str().c_str());
+    }
+
+    TRACEF("---- equals operator");
+    {
+        StringEnum e1 = StringEnum::bbb;
+        StringEnum e2 = StringEnum::bbb;
+        StringEnum e3 = StringEnum::ccc;
+        TRACEF("%s == %s? %d",
+                e1.str().c_str(),
+                e2.str().c_str(),
+                e1 == e2
+            );
+        TRACEF("%s == %s? %d",
+                e1.str().c_str(),
+                e3.str().c_str(),
+                e1 == e3
+            );
+    }
+    TRACEF("---- not equals operator");
+    {
+        StringEnum e1 = StringEnum::bbb;
+        StringEnum e2 = StringEnum::bbb;
+        StringEnum e3 = StringEnum::ccc;
+        TRACEF("%s != %s? %d",
+                e1.str().c_str(),
+                e2.str().c_str(),
+                e1 != e2
+            );
+        TRACEF("%s != %s? %d",
+                e1.str().c_str(),
+                e3.str().c_str(),
+                e1 != e3
+            );
+    }
+
+    TRACEF("---- equals to enum operator");
+    {
+        StringEnum e = StringEnum::bbb;
+        TRACEF("%s == bbb? %d",
+                e.str().c_str(),
+                e == StringEnum::bbb
+            );
+        TRACEF("%s == ccc? %d",
+                e.str().c_str(),
+                e == StringEnum::ccc
+            );
+    }
+    TRACEF("---- not equals to enum operator");
+    {
+        StringEnum e = StringEnum::bbb;
+        TRACEF("%s != bbb? %d",
+                e.str().c_str(),
+                e != StringEnum::bbb
+            );
+        TRACEF("%s != ccc? %d",
+                e.str().c_str(),
+                e != StringEnum::ccc
+            );
+    }
+
+    TRACEF("---- switch");
+    {
+        StringEnum e = StringEnum::bbb;
+        switch (e)
+        {
+            case StringEnum::aaa:
+                TRACEF("e is aaa");
+                break;
+            case StringEnum::bbb:
+                TRACEF("e is bbb");
+                break;
+            case StringEnum::ccc:
+                TRACEF("e is ccc");
+                break;
+        }
+    }
+
+    TRACEF("---- fromString");
+    {
+        StringEnum e;
+        bool res = e.fromString("bbb");
+        TRACEF("bbb: res? %d, %s",
+                res,
+                e.str().c_str()
+            );
+    }
+    {
+        StringEnum e;
+        bool res = e.fromString("zzz");
+        TRACEF("zzz: res? %d, %s",
+                res,
+                e.str().c_str()
+            );
+    }
+}
+
 int main(int argc, char * argv[])
 {
     (void)argc;
@@ -305,4 +463,5 @@ int main(int argc, char * argv[])
     test_escapeString();
     test_emailValidator();
     test_split();
+    test_stringenum();
 }
