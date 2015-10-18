@@ -8,7 +8,7 @@ CONFIG += debug
 CONFIG += console
 QMAKE_CXXFLAGS_WARN_ON = -Wall -Wextra
 QMAKE_CXXFLAGS_WARN_ON = -Werror    # treat warnings as errors
-#QMAKE_CXXFLAGS += -std=c++0x
+QMAKE_CXXFLAGS += -std=c++0x
 QMAKE_LFLAGS += -rdynamic
 #=--------------------------------
 #LIBS += -L. -lDanadamLog
