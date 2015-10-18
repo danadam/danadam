@@ -295,6 +295,16 @@ void test_split()
     }
 }
 
+void test_join()
+{
+    TRACE("%1(): --------------------------------").arg(__func__);
+
+    std::vector<int> vec{ 1, 2, 3, 4, 5 };
+    auto result = da::join(vec, ", ");
+    if (result != "1, 2, 3, 4, 5")
+        WARNF("failed");
+}
+
 void test_stringenum()
 {
     TRACE("%1(): --------------------------------").arg(__func__);
@@ -464,4 +474,5 @@ int main(int argc, char * argv[])
     test_emailValidator();
     test_split();
     test_stringenum();
+    test_join();
 }
