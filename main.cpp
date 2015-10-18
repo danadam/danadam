@@ -1,10 +1,13 @@
 #include "loggerf.h"
 #include "loggerqt.h"
 
+#include <list>
+
 #include "itoa.h"
 #include "stringutils.h"
 #include "emailvalidator.h"
 #include "stringenum.h"
+#include "daalgorithm.h"
 
 INIT_LOGGER();
 
@@ -462,6 +465,26 @@ void test_stringenum()
     }
 }
 
+void test_transform()
+{
+    TRACE("%1(): --------------------------------").arg(__func__);
+
+    {
+        std::vector<int> vec{ 1, 2, 3, 4, 5 };
+        auto result = da::transform(vec, [](int elem) { return std::to_string(elem); });
+
+        if (da::join(result, ", ") != "1, 2, 3, 4, 5")
+            WARNF("failed");
+    }
+    {
+        std::list<int> list{ 1, 2, 3, 4, 5 };
+        auto result = da::transform<std::vector>(list, [](int elem) { return std::to_string(elem); });
+
+        if (da::join(result, ", ") != "1, 2, 3, 4, 5")
+            WARNF("failed");
+    }
+}
+
 int main(int argc, char * argv[])
 {
     (void)argc;
@@ -475,4 +498,5 @@ int main(int argc, char * argv[])
     test_split();
     test_stringenum();
     test_join();
+    test_transform();
 }
