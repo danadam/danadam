@@ -8,6 +8,7 @@
 #include "emailvalidator.h"
 #include "stringenum.h"
 #include "daalgorithm.h"
+#include "dafunctional.h"
 
 INIT_LOGGER();
 
@@ -485,6 +486,18 @@ void test_transform()
     }
 }
 
+void test_call_n_times()
+{
+    3 * []()
+        {
+            TRACE("call_n_times");
+        };
+    3 * [](int i)
+        {
+            TRACE("call_n_times: %1").arg(i);
+        };
+}
+
 int main(int argc, char * argv[])
 {
     (void)argc;
@@ -499,4 +512,5 @@ int main(int argc, char * argv[])
     test_stringenum();
     test_join();
     test_transform();
+    test_call_n_times();
 }

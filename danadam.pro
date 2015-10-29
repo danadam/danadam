@@ -35,5 +35,6 @@ HEADERS += danadam/danadam.h \
            danadam/scopeguard_helper.h \
            danadam/stacktrace.h \
            danadam/daalgorithm.h \
+           danadam/dafunctional.h \
 
 SOURCES += main.cpp
