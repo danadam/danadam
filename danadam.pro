@@ -36,5 +36,6 @@ HEADERS += danadam/danadam.h \
            danadam/stacktrace.h \
            danadam/daalgorithm.h \
            danadam/dafunctional.h \
+           danadam/TrueValue.h \
 
 SOURCES += main.cpp

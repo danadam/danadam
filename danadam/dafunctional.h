@@ -3,14 +3,7 @@
 
 #include <type_traits>
 
-namespace detail
-{
-    template<typename>
-    struct TrueValue
-    {
-        static const bool value = true;
-    };
-}
+#include "TrueValue.h"
 
 template<
     typename FunctionT,
