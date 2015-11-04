@@ -498,6 +498,28 @@ void test_call_n_times()
         };
 }
 
+void test_generate_n()
+{
+    TRACE("%1(): --------------------------------").arg(__func__);
+
+    {
+        auto result = da::generate_n<std::vector>(
+                5,
+                []() { return 42; }
+            );
+        if (da::join(result, ", ") != "42, 42, 42, 42, 42")
+            WARNF("failed");
+    }
+    {
+        auto result = da::generate_n<std::vector>(
+                5,
+                [](int i) { return i*10; }
+            );
+        if (da::join(result, ", ") != "0, 10, 20, 30, 40")
+            WARNF("failed");
+    }
+}
+
 int main(int argc, char * argv[])
 {
     (void)argc;
@@ -513,4 +535,5 @@ int main(int argc, char * argv[])
     test_join();
     test_transform();
     test_call_n_times();
+    test_generate_n();
 }
