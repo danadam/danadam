@@ -3,15 +3,12 @@
 
 #include <type_traits>
 
-#include "TrueValue.h"
+#include "sfinae.h"
 
 template<
     typename FunctionT,
-    typename std::enable_if<
-            detail::TrueValue<
-                    typename std::result_of<FunctionT()>::type
-                >::value,
-            int
+    typename da::detail::SFINAE<
+            typename std::result_of<FunctionT()>::type
         >::type = 0
 >
 void operator*(int count, FunctionT&& func)
@@ -24,11 +21,8 @@ void operator*(int count, FunctionT&& func)
 
 template<
     typename FunctionT,
-    typename std::enable_if<
-            detail::TrueValue<
-                    typename std::result_of<FunctionT(int)>::type
-                >::value,
-            int
+    typename da::detail::SFINAE<
+            typename std::result_of<FunctionT(int)>::type
         >::type = 0
 >
 void operator*(int count, FunctionT&& func)

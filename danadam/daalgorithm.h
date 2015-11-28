@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-#include "TrueValue.h"
+#include "sfinae.h"
 
 namespace da
 {
@@ -27,11 +27,8 @@ template<
     typename OutputElementT = typename std::decay<      // std::decay in case the function returns (const) ref
             typename std::result_of<GeneratorFn()>::type
         >::type,
-    typename std::enable_if<
-            ::detail::TrueValue<
-                    typename std::result_of<GeneratorFn()>::type
-                >::value,
-            int
+    typename da::detail::SFINAE<
+            typename std::result_of<GeneratorFn()>::type
         >::type = 0
 >
 OutputContainerT<OutputElementT> generate_n(SizeT count, GeneratorFn&& generatorFn)
@@ -67,11 +64,8 @@ template<
     typename OutputElementT = typename std::decay<      // std::decay in case the function returns (const) ref
             typename std::result_of<GeneratorFn(SizeT)>::type
         >::type,
-    typename std::enable_if<
-            ::detail::TrueValue<
-                    typename std::result_of<GeneratorFn(SizeT)>::type
-                >::value,
-            int
+    typename da::detail::SFINAE<
+            typename std::result_of<GeneratorFn(SizeT)>::type
         >::type = 0
 >
 OutputContainerT<OutputElementT> generate_n(SizeT count, GeneratorFn&& generatorFn)
