@@ -80,6 +80,74 @@ OutputContainerT<OutputElementT> generate_n(SizeT count, GeneratorFn&& generator
     return result;
 }
 
+namespace detail
+{
+
+   struct General { };
+   struct Special : General { };
+
+   template<
+       typename T,
+       typename T::iterator (T::*)(typename T::iterator, typename T::iterator)
+   >
+   struct Has_Method_Iter_Iter { typedef int type; };
+
+   template<
+       typename ContainerT,
+       typename PredicateT,
+       typename detail::Has_Method_Iter_Iter<
+               ContainerT,
+               &ContainerT::erase
+           >::type = 0
+   >
+   void prune(ContainerT& container, PredicateT&& predicate, detail::Special)
+   {
+       container.erase(
+               std::remove_if(
+                       std::begin(container),
+                       std::end(container),
+                       std::forward<PredicateT>(predicate)
+                   ),
+               std::end(container)
+           );
+   }
+
+   template<typename ContainerT, typename PredicateT>
+   void prune(ContainerT& container, PredicateT&& predicate, detail::General)
+   {
+       auto it = std::begin(container);
+       const auto endIt = std::end(container);
+       while (it != endIt)
+           if (predicate(*it))
+               it = container.erase(it);
+           else
+               ++it;
+   }
+
+} // namespace detail
+
+/**
+ * Remove elements which match predicate.
+ */
+template<typename ContainerT, typename PredicateT>
+void prune(ContainerT& container, PredicateT&& predicate)
+{
+   // We have 2 detail::prune() function templates.
+   //
+   // If ContainerT has an erase() method accepting 2 iterators (e.g. std::vector)
+   // then both templates can be instantiated. The one with Special argument
+   // is a better match and it gets chosen in overload resolution.
+   //
+   // If ContainerT doesn't have an erase() method accepting 2 iterators (e.g.
+   // std::map) then the template with detail::Special argument cannot be
+   // instantiated. Thanks to SFINAE this is not an error and the other
+   // template is chosen.
+   detail::prune(
+           container,
+           std::forward<PredicateT>(predicate),
+           detail::Special()
+       );
+}
 
 /**
  * A wrapper around std::transform().

@@ -2,6 +2,7 @@
 #include "loggerqt.h"
 
 #include <list>
+#include <map>
 
 #include "itoa.h"
 #include "stringutils.h"
@@ -520,6 +521,41 @@ void test_generate_n()
     }
 }
 
+void test_prune()
+{
+    TRACE("%1(): --------------------------------").arg(__func__);
+
+    {
+        const std::vector<int> expected { 1, 3, 5, };
+
+        std::vector<int> v { 1, 2, 3, 4, 5, };
+        auto is_even = [](int elem) { return elem % 2 == 0; };
+
+        da::prune(v, is_even);
+        if (v != expected)
+            WARNF("failed");
+    }
+    {
+        const std::map<int, std::string> expected {
+                { 1, "one" },
+                { 2, "two" },
+            };
+
+        std::map<int, std::string> map {
+                { 0, "zero" },
+                { 1, "one" },
+                { 2, "two" },
+                { 3, "three" },
+                { 4, "four" },
+            };
+        auto longer_than_3 = [](const std::pair<int, std::string>& elem) { return elem.second.size() > 3; };
+
+        da::prune(map, longer_than_3);
+        if (map != expected)
+            WARNF("failed");
+    }
+}
+
 int main(int argc, char * argv[])
 {
     (void)argc;
@@ -536,4 +572,5 @@ int main(int argc, char * argv[])
     test_transform();
     test_call_n_times();
     test_generate_n();
+    test_prune();
 }
